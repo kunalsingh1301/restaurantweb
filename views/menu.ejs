@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Menu</title>
+  <link rel="stylesheet" href="/menu.css">
+</head>
+<body>
+  <nav>
+    <a href="/"><h1>Menu</h1></a>
+    <input type="text" id="searchInput" placeholder="Search">
+    <% if (user) { %>
+      <span>Welcome, <%= user.username %></span>
+      <a href="/logout">Logout</a>
+    <% } else { %>
+      <a href="/login">Login</a>
+      <a href="/signup">Signup</a>
+    <% } %>
+  </nav>
+  <div class="wakarnai">
+    <ul id="menuItems">
+      <% for (let item of items) { %>
+      <li>
+        <img src="<%= item.image %>" alt="<%= item.name %>">
+        <h3><%= item.name %></h3>
+        <p><%= item.price %></p>
+        <% if (user) { %>
+        <button class="addToCart" data-name="<%= item.name %>" data-price="<%= item.price %>">Add to Cart</button>
+        <% } %>
+      </li>
+      <% } %>
+    </ul>
+    <div id="cartItems">
+      <h2>Order Summary</h2>
+      <ul id="orderSummary"></ul>
+      <h3>Total: <span id="totalPrice">0</span></h3>
+      <% if (user) { %>
+      <button id="checkoutBtn">Checkout</button>
+      <% } %>
+    </div>
+  </div>
+
+  <script>
+function calculateTotal() {
+  const orderItems = document.querySelectorAll('#orderSummary li');
+  let totalPrice = 0;
+
+  for (let i = 0; i < orderItems.length; i++) {
+    const price = parseFloat(orderItems[i].getAttribute('data-price').replace(/["$]/g, ''));
+    const quantity = parseInt(orderItems[i].getAttribute('data-quantity'));
+    totalPrice += price * quantity;
+  }
+
+  document.getElementById('totalPrice').textContent = totalPrice.toFixed(2);
+}
+
+    const addToCartButtons = document.querySelectorAll('.addToCart');
+    const orderSummary = document.getElementById('orderSummary');
+
+    addToCartButtons.forEach(function(button) {
+      button.addEventListener('click', function() {
+        const itemName = this.getAttribute('data-name');
+        const itemPrice = parseFloat(this.getAttribute('data-price').replace(/["$]/g, ""));
+
+        const existingItem = orderSummary.querySelector(`li[data-name="${itemName}"]`);
+        if (existingItem) {
+          const quantityElement = existingItem.querySelector('.quantity');
+          const quantity = parseInt(quantityElement.getAttribute('data-quantity'));
+          quantityElement.setAttribute('data-quantity', quantity + 1);
+          quantityElement.textContent = quantity + 1;
+        } else {
+          const itemElement = document.createElement('li');
+          itemElement.textContent = `${itemName} - `;
+          itemElement.setAttribute('data-name', itemName);
+          itemElement.setAttribute('data-price', itemPrice);
+          itemElement.setAttribute('data-quantity', 1);
+
+          const decreaseButton = document.createElement('button');
+          decreaseButton.textContent = '-';
+          decreaseButton.addEventListener('click', function() {
+            const quantityElement = this.parentElement.querySelector('.quantity');
+            const quantity = parseInt(quantityElement.getAttribute('data-quantity'));
+            if (quantity > 1) {
+              quantityElement.setAttribute('data-quantity', quantity - 1);
+              quantityElement.textContent = quantity - 1;
+            }
+            calculateTotal();
+          });
+          itemElement.appendChild(decreaseButton);
+
+          const quantityElement = document.createElement('span');
+          quantityElement.classList.add('quantity');
+          quantityElement.setAttribute('data-quantity', 1);
+          quantityElement.textContent = '1';
+          itemElement.appendChild(quantityElement);
+
+          const increaseButton = document.createElement('button');
+          increaseButton.textContent = '+';
+          increaseButton.addEventListener('click', function() {
+            const quantityElement = this.parentElement.querySelector('.quantity');
+            const quantity = parseInt(quantityElement.getAttribute('data-quantity'));
+            quantityElement.setAttribute('data-quantity', quantity + 1);
+            quantityElement.textContent = quantity + 1;
+            calculateTotal();
+          });
+          itemElement.appendChild(increaseButton);
+
+          const deleteButton = document.createElement('button');
+          deleteButton.textContent = 'Delete';
+          deleteButton.addEventListener('click', function() {
+            itemElement.remove();
+            calculateTotal();
+          });
+          itemElement.appendChild(deleteButton);
+
+          orderSummary.appendChild(itemElement);
+        }
+
+        calculateTotal();
+      });
+    });
+
+    const checkoutButton = document.getElementById('checkoutBtn');
+    if (checkoutButton) {
+      checkoutButton.addEventListener('click', function() {
+        if (confirm('Are you sure you want to place the order?')) {
+          const orderSummaryItems = document.querySelectorAll('#orderSummary li');
+          const orderDetails = [];
+
+          orderSummaryItems.forEach(function(item) {
+            const itemName = item.getAttribute('data-name');
+            const itemPrice = parseFloat(item.getAttribute('data-price'));
+            const itemQuantity = parseInt(item.getAttribute('data-quantity'));
+
+            orderDetails.push({
+              name: itemName,
+              quantity: itemQuantity,
+              price: itemPrice
+            });
+          });
+
+          fetch('/confirm-order', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(orderDetails)
+          })
+            .then(response => response.text())
+            .then(data => {
+              console.log(data);
+              window.location.href = '/confirmationPage';
+            })
+            .catch(error => {
+              console.log(error);
+            });
+        }
+      });
+    }
+    
+  </script>
+</body>
+</html>

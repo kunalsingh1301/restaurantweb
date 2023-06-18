@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Signup</title>
+  <link rel="stylesheet" href="/signup.css"> 
+</head>
+<body>
+  <h1>Signup</h1>
+  <form id="signupForm">
+    <div>
+      <label for="username">Username:</label>
+      <input type="text" id="username" name="username" required>
+    </div>
+    <div>
+      <label for="email">Email:</label>
+      <input type="email" id="email" name="email" required>
+    </div>
+    <div>
+      <label for="password">Password:</label>
+      <input type="password" id="password" name="password" required>
+    </div>
+    <div>
+      <label for="confirmPassword">Confirm Password:</label>
+      <input type="password" id="confirmPassword" name="confirmPassword" required>
+    </div>
+    <input type="submit" value="Submit Form" >
+    <a href="/login">Go to login page</a>
+  </form>
+
+  <script>
+    const form = document.getElementById("signupForm")
+    form.addEventListener('submit', registeruser)
+
+    async function registeruser(event){
+      event.preventDefault()
+      const username = document.getElementById("username").value
+      const password = document.getElementById("password").value
+
+      const result = await fetch('/api/signup',{
+        method:'POST',
+        headers:{
+          'Content-Type':'application/json'
+        },
+        body: JSON.stringify({
+          username,
+          password
+        })
+      }).then((res) => res.json())
+
+      if(result.status === 'ok'){
+      }else{
+        alert(result.error)
+      }
+      console.log(result)
+    }
+  </script>
+</body>
+</html>

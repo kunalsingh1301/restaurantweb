@@ -1,0 +1,94 @@
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #ccc;
+  }
+  
+  nav {
+    background-color: #333;
+    padding: 10px;
+    color: #fff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+  }
+  
+  nav h1 {
+    margin: 0;
+    text-decoration: none;
+  }
+  
+  .wakarnai {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin: 20px;
+  }
+  
+  ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  li {
+    margin-bottom: 20px;
+  }
+  
+  li img {
+    width: 200px;
+    height: 150px;
+  }
+  
+  li h3,
+  li p {
+    margin: 5px 0;
+  }
+  
+  .addToCart {
+    padding: 5px 10px;
+    background-color: #333;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+  }
+  
+  #cartItems {
+    background-color: #f4f4f4;
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 20px;
+    position: fixed;
+    top: 50px;
+    right: 25px;
+  }
+  
+  .cartItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 0;
+    border-bottom: 1px solid #ccc;
+  }
+  
+  .cartItem span {
+    margin-right: 10px;
+  }
+  
+  .deleteItem {
+    padding: 3px 8px;
+    background-color: #ff0000;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+  }
+  
+  #searchInput {
+    padding: 5px;
+    margin-bottom: 10px;
+  }
+  
