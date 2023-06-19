@@ -118,45 +118,44 @@ function calculateTotal() {
         calculateTotal();
       });
     });
-
-    const checkoutButton = document.getElementById('checkoutBtn');
-    if (checkoutButton) {
-      checkoutButton.addEventListener('click', function() {
-        if (confirm('Are you sure you want to place the order?')) {
-          const orderSummaryItems = document.querySelectorAll('#orderSummary li');
-          const orderDetails = [];
-
-          orderSummaryItems.forEach(function(item) {
-            const itemName = item.getAttribute('data-name');
-            const itemPrice = parseFloat(item.getAttribute('data-price'));
-            const itemQuantity = parseInt(item.getAttribute('data-quantity'));
-
-            orderDetails.push({
-              name: itemName,
-              quantity: itemQuantity,
-              price: itemPrice
-            });
-          });
-
-          fetch('/confirm-order', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(orderDetails)
-          })
-            .then(response => response.text())
-            .then(data => {
-              console.log(data);
-              window.location.href = '/confirmationPage';
-            })
-            .catch(error => {
-              console.log(error);
-            });
-        }
-      });
-    }
     
+  const checkoutButton = document.getElementById('checkoutBtn');
+  if (checkoutButton) {
+    checkoutButton.addEventListener('click', function() {
+      if (confirm('Are you sure you want to place the order?')) {
+        const orderSummaryItems = document.querySelectorAll('#orderSummary li');
+        const orderDetails = [];
+
+        orderSummaryItems.forEach(function(item) {
+          const itemName = item.getAttribute('data-name');
+          const itemPrice = parseFloat(item.getAttribute('data-price'));
+          const itemQuantity = parseInt(item.getAttribute('data-quantity'));
+
+          orderDetails.push({
+            name: itemName,
+            quantity: itemQuantity,
+            price: itemPrice
+          });
+        });
+
+        fetch('/confirm-order', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(orderDetails)
+        })
+          .then(response => response.text())
+          .then(data => {
+            console.log(data);
+            window.location.href = '/confirmationPage';
+          })
+          .catch(error => {
+            console.log(error);
+          });
+      }
+    });
+  }   
   </script>
 </body>
 </html>
