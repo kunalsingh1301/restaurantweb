@@ -9,7 +9,7 @@
     <a href="/"><h1>Menu</h1></a>
     <input type="text" id="searchInput" placeholder="Search">
     <% if (user) { %>
-      <span>Welcome, <%= user.username %></span>
+      <span><a href="/userProfile"><%= user.username %> see your profile</a></span>
       <a href="/logout">Logout</a>
     <% } else { %>
       <a href="/login">Login</a>

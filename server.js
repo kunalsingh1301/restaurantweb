@@ -36,7 +36,10 @@ const requireAuth = (req, res, next) => {
           console.log(decodedToken);
           User.findById(decodedToken.id)
             .then(user => {
-              req.user = user;
+              req.user = {
+                id: user._id,
+                username: user.username,
+              };
               next();
             })
             .catch(err => {
@@ -135,6 +138,10 @@ app.get('/confirmationPage', (req, res) => {
     res.render('confirmationPage');
   });
 
+app.get('/userProfile', requireAuth, (req, res) => {
+  res.render('userProfile', { user: req.user });
+});
+  
 app.use((req,res) =>{
     res.sendFile('./views/404.html',{root:__dirname})
 })
